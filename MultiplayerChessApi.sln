@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34902.65
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiplayerChessApi", "MultiplayerChessApi\MultiplayerChessApi.csproj", "{05672B02-CE58-4AC7-9644-96821A50022C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{97F4683C-A93A-40A7-A837-FC179083A700}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj", "{FE8DEC8F-E75A-4090-B724-6491537E7AF4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05672B02-CE58-4AC7-9644-96821A50022C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05672B02-CE58-4AC7-9644-96821A50022C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05672B02-CE58-4AC7-9644-96821A50022C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05672B02-CE58-4AC7-9644-96821A50022C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97F4683C-A93A-40A7-A837-FC179083A700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97F4683C-A93A-40A7-A837-FC179083A700}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97F4683C-A93A-40A7-A837-FC179083A700}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97F4683C-A93A-40A7-A837-FC179083A700}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE8DEC8F-E75A-4090-B724-6491537E7AF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE8DEC8F-E75A-4090-B724-6491537E7AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE8DEC8F-E75A-4090-B724-6491537E7AF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE8DEC8F-E75A-4090-B724-6491537E7AF4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AAB8DC86-1D09-4A68-AEE4-C70696DB3F4E}
+	EndGlobalSection
+EndGlobal
