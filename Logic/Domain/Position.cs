@@ -17,6 +17,11 @@ namespace Logic.Domain
             Row = row;
         }
 
+        public static Position operator +(Position pos, Direction dir)
+        {
+            return new Position(pos.Col + dir.DeltaCol, pos.Row + dir.DeltaRow);
+        }
+
         public override bool Equals(object? obj)
         {
             return obj is Position position &&

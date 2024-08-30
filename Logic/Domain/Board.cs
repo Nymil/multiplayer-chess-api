@@ -56,5 +56,15 @@ namespace Logic.Domain
                 this[col, 6] = new Pawn(PlayerColor.Black);
             }
         }
+
+        public bool Contains(Position pos)
+        {
+            return pos.Col >= 0 && pos.Col < 8 && pos.Row >= 0 && pos.Row < 8;
+        }
+
+        public bool IsEmpty(Position pos)
+        {
+            return this[pos] == null;
+        }
     }
 }
