@@ -38,22 +38,22 @@ namespace Logic.Domain
         private void AddNonPawnPiecesForColor(PlayerColor color)
         {
             int row = color == PlayerColor.White ? 0 : 7;
-            this[row, 0] = new Rook(color);
-            this[row, 1] = new Knight(color);
-            this[row, 2] = new Bishop(color);
-            this[row, 3] = new Queen(color);
-            this[row, 4] = new King(color);
-            this[row, 5] = new Bishop(color);
-            this[row, 6] = new Knight(color);
-            this[row, 7] = new Rook(color);
+            this[0, row] = new Rook(color);
+            this[1, row] = new Knight(color);
+            this[2, row] = new Bishop(color);
+            this[3, row] = new Queen(color);
+            this[4, row] = new King(color);
+            this[5, row] = new Bishop(color);
+            this[6, row] = new Knight(color);
+            this[7, row] = new Rook(color);
         }
 
         private void AddNonPawnPieces()
         {
             for (int col = 0; col < 8; col++)
             {
-                this[1, col] = new Pawn(PlayerColor.White);
-                this[6, col] = new Pawn(PlayerColor.Black);
+                this[col, 1] = new Pawn(PlayerColor.White);
+                this[col, 6] = new Pawn(PlayerColor.Black);
             }
         }
     }
