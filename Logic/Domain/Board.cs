@@ -17,6 +17,12 @@ namespace Logic.Domain
             set { _pieces[col, row] = value; }
         }
 
+        public Piece this[Position position]
+        {
+            get { return _pieces[position.Col, position.Row]; }
+            set { _pieces[position.Col, position.Row] = value; }
+        }
+
         public Board()
         {
             AddStartPieces();
