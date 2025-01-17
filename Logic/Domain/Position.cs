@@ -6,16 +6,10 @@ using System.Threading.Tasks;
 
 namespace Logic.Domain
 {
-    public class Position
+    public class Position(int col, int row)
     {
-        public int Row { get; init; }
-        public int Col { get; init; }
-
-        public Position(int col, int row)
-        {
-            Col = col;
-            Row = row;
-        }
+        public int Row { get; init; } = row;
+        public int Col { get; init; } = col;
 
         public static Position operator +(Position pos, Direction dir)
         {
