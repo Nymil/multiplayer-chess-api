@@ -10,7 +10,10 @@ namespace Logic.Service
 {
     public class ChessApiService : IChessApiService
     {
+        private static readonly Lazy<ChessApiService> _instance = new Lazy<ChessApiService>(() => new ChessApiService());
         private IEnumerable<ChessGame> _games = new List<ChessGame>();
+        public static ChessApiService Instance = _instance.Value;
+        private ChessApiService() {}
 
         public IEnumerable<ChessGame> GetGames()
         {
