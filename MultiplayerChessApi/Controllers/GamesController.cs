@@ -1,3 +1,4 @@
+using Logic.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,10 +8,12 @@ namespace MultiplayerChessApi.Controllers
     [ApiController]
     public class GamesController : ControllerBase
     {
+        private static IChessApiService _service = ChessApiService.Instance;
+
         [HttpGet]
         public IActionResult GetGames()
         {
-            return Ok("Successfully initiated controller");
+            return Ok("Getting all games");
         }
     }
 }
