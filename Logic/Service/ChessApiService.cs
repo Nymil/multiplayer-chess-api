@@ -19,5 +19,10 @@ namespace Logic.Service
         {
             return _games;
         }
+
+        public ChessGame? GetGameById(string id)
+        {
+            return _games.FirstOrDefault(game => game.Id == id);
+        }
     }
 }

@@ -8,5 +8,11 @@ namespace Logic.Domain
 {
     public class ChessGame
     {
+        public string Id { get; init; }
+
+        public ChessGame()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
     }
 }
