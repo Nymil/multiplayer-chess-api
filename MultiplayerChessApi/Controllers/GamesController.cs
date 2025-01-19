@@ -11,9 +11,9 @@ namespace MultiplayerChessApi.Controllers
         private static IChessApiService _service = ChessApiService.Instance;
 
         [HttpGet]
-        public IActionResult GetGames()
+        public OkObjectResult GetGames()
         {
-            return Ok("Getting all games");
+            return Ok("Games got");
         }
     }
 }
