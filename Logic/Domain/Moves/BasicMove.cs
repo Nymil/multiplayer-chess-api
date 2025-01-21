@@ -1,4 +1,5 @@
-﻿using Logic.Domain.Exceptions;
+﻿using Logic.Domain.BoardUtil;
+using Logic.Domain.Exceptions;
 using Logic.Domain.Pieces;
 using System;
 using System.Collections.Generic;

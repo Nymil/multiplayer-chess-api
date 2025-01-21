@@ -1,4 +1,6 @@
-﻿using Logic.Domain.Moves;
+﻿using Logic.Domain.BoardUtil;
+using Logic.Domain.Moves;
+using Logic.Domain.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +40,7 @@ namespace Logic.Domain.Pieces
         public override IEnumerable<Move> GetMoves(Position startPosition, Board board)
         {
             return MovePositionsOfDirection(startPosition, board, _directions)
-                .Select(endPosition => new NormalMove(startPosition, endPosition));
+                .Select(endPosition => new BasicMove(startPosition, endPosition));
         }
     }
 }
