@@ -4,7 +4,7 @@ namespace Logic.Domain.Exceptions;
 
 public class IllegalStateException : ChessGameException
 {
-    private static readonly int _CODE = 409;
+    private static readonly int _CODE = 405;
     public IllegalStateException(string message) : base(message) {
         Code = _CODE;
     }

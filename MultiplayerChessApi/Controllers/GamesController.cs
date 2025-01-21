@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using Logic.Domain.Exceptions;
 using Logic.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +15,8 @@ namespace MultiplayerChessApi.Controllers
         [HttpGet]
         public OkObjectResult GetGames()
         {
-            return Ok("Games got");
+            throw new IllegalStateException("Test error");
+            //return Ok("Games got");
         }
     }
 }

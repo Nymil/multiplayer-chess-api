@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic.Domain.Board
+namespace Logic.Domain.BoardUtil
 {
     public class Direction
     {
