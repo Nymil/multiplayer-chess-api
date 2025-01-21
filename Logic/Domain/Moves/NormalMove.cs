@@ -1,4 +1,5 @@
-﻿using Logic.Domain.Pieces;
+﻿using Logic.Domain.Exceptions;
+using Logic.Domain.Pieces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Logic.Domain.Moves
 
         public override void Execute(Board board)
         {
-            Piece piece = board[Start] ?? throw new Exception("No piece at start location to move");
+            Piece piece = board[Start] ?? throw new IllegalArgumentException("No piece at start location to move");
             board[End] = piece;
             board[Start] = null;
             piece.HasMoved = true;
