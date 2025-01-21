@@ -60,7 +60,7 @@ namespace Logic.Domain.BoardUtil
 
         public string ToSmallFen() // smallfen is only the pieces on the board without the next player and castling rights
         {
-            StringBuilder fen = new StringBuilder();
+            StringBuilder fen = new StringBuilder(72);
             for (int row = 7; row >= 0; row--)
             {
                 int emptyCount = 0;
