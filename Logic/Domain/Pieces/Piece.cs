@@ -25,7 +25,7 @@ namespace Logic.Domain.Pieces
                     continue;
                 }
 
-                Piece piece = board[pos];
+                Piece piece = board[pos]!;
                 if (piece.Color != Color)
                 {
                     yield return pos;

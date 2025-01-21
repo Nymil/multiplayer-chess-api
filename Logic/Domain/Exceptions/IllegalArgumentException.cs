@@ -2,7 +2,10 @@ using System;
 
 namespace Logic.Domain.Exceptions;
 
-public class IllegalArgumentException : Exception
+public class IllegalArgumentException : ChessGameException
 {
-    public IllegalArgumentException(string message) : base(message) { }
+    private static readonly int _CODE = 409;
+    public IllegalArgumentException(string message) : base(message) {
+        Code = _CODE;
+    }
 }

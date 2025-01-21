@@ -46,7 +46,7 @@ namespace Logic.Domain.Pieces
                 return false;
             }
 
-            Piece piece = board[position];
+            Piece piece = board[position]!;
             return piece.Color != Color;
         }
 
@@ -55,12 +55,12 @@ namespace Logic.Domain.Pieces
             Position forwardPosition = startPosition + _forward;
             if (CanMoveTo(forwardPosition, board))
             {
-                yield return new NormalMove(startPosition, forwardPosition);
+                yield return new BasicMove(startPosition, forwardPosition);
 
                 Position doubleForwardPosition = forwardPosition + _forward;
                 if (!HasMoved && CanMoveTo(doubleForwardPosition, board))
                 {
-                    yield return new NormalMove(startPosition, doubleForwardPosition);
+                    yield return new BasicMove(startPosition, doubleForwardPosition);
                 }
             }
         }
@@ -73,7 +73,7 @@ namespace Logic.Domain.Pieces
 
                 if (CanCaptureAt(endPosition, board))
                 {
-                    yield return new NormalMove(startPosition, endPosition);
+                    yield return new BasicMove(startPosition, endPosition);
                 }
             }
         }

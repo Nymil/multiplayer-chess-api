@@ -34,7 +34,7 @@ namespace Logic.Domain.Pieces
         public override IEnumerable<Move> GetMoves(Position startPosition, Board board)
         {
             return MovePositionsOfDirection(startPosition, board, _directions)
-                .Select(endPosition => new NormalMove(startPosition, endPosition));
+                .Select(endPosition => new BasicMove(startPosition, endPosition));
         }
     }
 }

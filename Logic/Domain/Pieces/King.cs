@@ -46,7 +46,7 @@ namespace Logic.Domain.Pieces
                     continue;
                 }
 
-                if (board.IsEmpty(endPosition) || board[endPosition].Color != Color)
+                if (board.IsEmpty(endPosition) || board[endPosition]?.Color != Color)
                 {
                     yield return endPosition;
                 }

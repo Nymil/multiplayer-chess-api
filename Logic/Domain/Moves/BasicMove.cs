@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Logic.Domain.Moves
 {
-    public class NormalMove : Move
+    public class BasicMove : Move
     {
         public override MoveType Type => MoveType.Basic;
         public override Position Start { get; init; }
         public override Position End { get; init; }
 
-        public NormalMove(Position start, Position end)
+        public BasicMove(Position start, Position end)
         {
             Start = start;
             End = end;

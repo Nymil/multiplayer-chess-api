@@ -42,7 +42,7 @@ namespace Logic.Domain.Pieces
             {
                 return false;
             }
-            return board.IsEmpty(position) || board[position].Color != Color;
+            return board.IsEmpty(position) || board[position]?.Color != Color;
         }
 
         private IEnumerable<Position> MovePositions(Position startPosition, Board board)
@@ -52,7 +52,7 @@ namespace Logic.Domain.Pieces
 
         public override IEnumerable<Move> GetMoves(Position startPosition, Board board)
         {
-            return MovePositions(startPosition, board).Select(endPosition => new NormalMove(startPosition, endPosition));
+            return MovePositions(startPosition, board).Select(endPosition => new BasicMove(startPosition, endPosition));
         }
     }
 }
