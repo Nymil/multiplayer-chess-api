@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Logic.Domain
 {
-    public class Direction(int deltaCol, int deltaRow)
+    public class Direction
     {
         public static Direction North => new Direction(0, 1);
         public static Direction South => new Direction(0, -1);
@@ -17,8 +17,14 @@ namespace Logic.Domain
         public static Direction SouthEast => South + East;
         public static Direction SouthWest => South + West;
 
-        public int DeltaCol { get; init; } = deltaCol;
-        public int DeltaRow { get; init; } = deltaRow;
+        public int DeltaCol { get; init; }
+        public int DeltaRow { get; init; }
+
+        private Direction(int deltaCol, int deltaRow)
+        {
+            DeltaCol = deltaCol;
+            DeltaRow = deltaRow;
+        }
 
         public static Direction operator +(Direction a, Direction b)
         {
