@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace Logic.Domain.Moves
 
         public override void Execute(Board board)
         {
-            Piece piece = board[Start];
+            Piece piece = board[Start] ?? throw new Exception("No piece at start location to move");
             board[End] = piece;
             board[Start] = null;
             piece.HasMoved = true;

@@ -9,15 +9,15 @@ namespace Logic.Domain
 {
     public class Board
     {
-        private readonly Piece[,] _pieces = new Piece[8, 8];
+        private readonly Piece?[,] _pieces = new Piece[8, 8];
 
-        public Piece this[int col, int row]
+        public Piece? this[int col, int row]
         {
             get { return _pieces[col, row]; }
             set { _pieces[col, row] = value; }
         }
 
-        public Piece this[Position position]
+        public Piece? this[Position position]
         {
             get { return _pieces[position.Col, position.Row]; }
             set { _pieces[position.Col, position.Row] = value; }
