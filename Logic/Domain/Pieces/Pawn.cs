@@ -36,7 +36,7 @@ namespace Logic.Domain.Pieces
 
         private bool CanMoveTo(Position position, Board board)
         {
-            return board.IsEmpty(position) && board.Contains(position);
+            return board.Contains(position) && board.IsEmpty(position);
         }
 
         private bool CanCaptureAt(Position position, Board board)
