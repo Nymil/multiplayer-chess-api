@@ -46,7 +46,7 @@ namespace Logic.Domain
             IEnumerable<Move> legalMoves = LegalMovesForPiece(move.Start);
             if (!legalMoves.Contains(move))
             {
-                throw new IllegalArgumentException("Illegal move");
+                throw new IllegalStateException("Illegal move");
             }
         }
     }

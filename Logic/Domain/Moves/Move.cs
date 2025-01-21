@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using Logic.Domain.BoardUtil;
@@ -15,20 +16,24 @@ namespace Logic.Domain.Moves
         public abstract void Execute(Board board);
         public override bool Equals(object? obj)
         {
-            if (obj is Move otherMove)
-            {
-                return Start.Equals(otherMove.Start)
-                    && End.Equals(otherMove.End);
-            }
-            return false;
+            return obj is Move otherMove &&
+                   Start == otherMove.Start &&
+                   End == otherMove.End;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(
-                Start,
-                End
-            );
+            return HashCode.Combine(Start,End);
+        }
+
+        public static bool operator ==(Move? move1, Move? move2)
+        {
+            return EqualityComparer<Move>.Default.Equals(move1, move2);
+        }
+
+        public static bool operator !=(Move? move1, Move? move2)
+        {
+            return !(move1 == move2);
         }
     }
 }
