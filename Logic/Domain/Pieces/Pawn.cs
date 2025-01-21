@@ -41,7 +41,7 @@ namespace Logic.Domain.Pieces
 
         private bool CanCaptureAt(Position position, Board board)
         {
-            if (board.IsEmpty(position) || !board.Contains(position))
+            if (!board.Contains(position) || board.IsEmpty(position))
             {
                 return false;
             }
