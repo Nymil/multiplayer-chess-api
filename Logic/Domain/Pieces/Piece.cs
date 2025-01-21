@@ -41,5 +41,15 @@ namespace Logic.Domain.Pieces
         {
             return directions.SelectMany(dir => MovePositionsOfDirection(startPosition, board, dir));
         }
+
+        public char ToFen()
+        {
+            return Color switch
+            {
+                PlayerColor.White => char.ToUpper(Type.GetFenLetter()),
+                PlayerColor.Black => char.ToLower(Type.GetFenLetter()),
+                _ => throw new InvalidOperationException("Invalid color")
+            };
+        }
     }
 }

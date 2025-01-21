@@ -58,6 +58,42 @@ namespace Logic.Domain.BoardUtil
             }
         }
 
+        public string ToSmallFen() // smallfen is only the pieces on the board without the next player and castling rights
+        {
+            StringBuilder fen = new StringBuilder();
+            for (int row = 7; row >= 0; row--)
+            {
+                int emptyCount = 0;
+                for (int col = 0; col < 8; col++)
+                {
+                    Piece? piece = this[col, row];
+                    if (piece == null)
+                    {
+                        emptyCount++;
+                        continue;
+                    }
+                    
+                    if (emptyCount > 0)
+                    {
+                        fen.Append(emptyCount);
+                        emptyCount = 0;
+                    }
+                    fen.Append(piece.ToFen());
+                }
+
+                if (emptyCount > 0)
+                {
+                    fen.Append(emptyCount);
+                }
+
+                if (row > 0)
+                {
+                    fen.Append('/');
+                }
+            }
+            return fen.ToString();
+        }
+
         public bool Contains(Position pos)
         {
             return pos.Col >= 0 && pos.Col < 8 && pos.Row >= 0 && pos.Row < 8;
@@ -66,6 +102,11 @@ namespace Logic.Domain.BoardUtil
         public bool IsEmpty(Position pos)
         {
             return this[pos] == null;
+        }
+
+        public override string ToString()
+        {
+            return ToSmallFen();
         }
     }
 }
