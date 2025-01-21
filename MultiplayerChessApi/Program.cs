@@ -1,3 +1,5 @@
+using Logic.Service;
+using MultiplayerChessApi.Mapping;
 using MultiplayerChessApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Register AutoMapper
+builder.Services.AddAutoMapper(typeof(ChessGameProfile));
+
+// Register ChessApiService as a singleton
+builder.Services.AddSingleton<IChessApiService>(ChessApiService.Instance);
 
 var app = builder.Build();
 

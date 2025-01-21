@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +14,14 @@ namespace Logic.Domain
 {
     public class ChessGame
     {
+        private PlayerColor _currentPlayer = PlayerColor.White;
+        private ChessGameState _state = ChessGameState.Waiting;
+
         public string Id { get; init; }
         public Board Board { get; init; }
-        public PlayerColor currentPlayer { get; set; } = PlayerColor.White;
+        public PlayerColor CurrentPlayer => _currentPlayer;
+        public ChessGameState State => _state;
+
 
         public ChessGame()
         {
@@ -25,7 +31,7 @@ namespace Logic.Domain
 
         public IEnumerable<Move> LegalMovesForPiece(Position startPosition)
         {
-            if (Board.IsEmpty(startPosition) || Board[startPosition]?.Color != currentPlayer)
+            if (Board.IsEmpty(startPosition) || Board[startPosition]?.Color != _currentPlayer)
             {
                 return Enumerable.Empty<Move>();
             }
@@ -38,7 +44,7 @@ namespace Logic.Domain
         {
             ValidateMove(move);
             move.Execute(Board);
-            currentPlayer = currentPlayer.GetOpponent();
+            _currentPlayer = _currentPlayer.GetOpponent();
         }
 
         private void ValidateMove(Move move)
@@ -46,7 +52,12 @@ namespace Logic.Domain
             IEnumerable<Move> legalMoves = LegalMovesForPiece(move.Start);
             if (!legalMoves.Contains(move))
             {
-                throw new IllegalStateException("Illegal move");
+                throw new ChessIllegalStateException("Illegal move");
+            }
+
+            if (State != ChessGameState.InProgress)
+            {
+                throw new ChessIllegalStateException("Game is not in progress");
             }
         }
     }

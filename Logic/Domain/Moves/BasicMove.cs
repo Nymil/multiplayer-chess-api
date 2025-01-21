@@ -24,7 +24,7 @@ namespace Logic.Domain.Moves
 
         public override void Execute(Board board)
         {
-            Piece piece = board[Start] ?? throw new IllegalStateException("No piece at start location to move");
+            Piece piece = board[Start] ?? throw new ChessIllegalStateException("No piece at start location to move");
             board[End] = piece;
             board[Start] = null;
             piece.HasMoved = true;

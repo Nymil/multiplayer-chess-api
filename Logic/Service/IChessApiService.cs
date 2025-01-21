@@ -10,5 +10,7 @@ namespace Logic.Service
     public interface IChessApiService
     {
         IEnumerable<ChessGame> GetGames();
+        ChessGame? GetGame(string gameId);
+        ChessGame CreateGame();
     }
 }

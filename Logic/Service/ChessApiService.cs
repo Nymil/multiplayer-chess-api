@@ -20,9 +20,16 @@ namespace Logic.Service
             return _games;
         }
 
-        public ChessGame? GetGameById(string id)
+        public ChessGame? GetGame(string id)
         {
             return _games.FirstOrDefault(game => game.Id == id);
+        }
+
+        public ChessGame CreateGame()
+        {
+            ChessGame newGame = new ChessGame();
+            _games = _games.Append(newGame);
+            return newGame;
         }
     }
 }
