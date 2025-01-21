@@ -35,6 +35,17 @@ namespace Logic.Domain.Pieces
             return copy;
         }
 
+        private bool CanCaptureAt(Position position, Board board)
+        {
+            if (!board.Contains(position) || board.IsEmpty(position))
+            {
+                return false;
+            }
+
+            Piece piece = board[position]!;
+            return piece.Color != Color;
+        }
+
         private IEnumerable<Position> MovePositions(Position startPosition, Board board)
         {
             foreach (Direction dir in _directions)
@@ -46,7 +57,7 @@ namespace Logic.Domain.Pieces
                     continue;
                 }
 
-                if (board.IsEmpty(endPosition) || board[endPosition]?.Color != Color)
+                if (board.IsEmpty(endPosition) || CanCaptureAt(endPosition, board))
                 {
                     yield return endPosition;
                 }
@@ -58,7 +69,7 @@ namespace Logic.Domain.Pieces
             // TODO: castling later
             foreach (Position endPosition in MovePositions(startPosition, board))
             {
-                yield return new NormalMove(startPosition, endPosition);
+                yield return new BasicMove(startPosition, endPosition);
             }
         }
     }
