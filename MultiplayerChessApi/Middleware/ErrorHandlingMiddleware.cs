@@ -31,7 +31,7 @@ public class ErrorHandlingMiddleware
         HttpResponse response = context.Response;
         response.ContentType = "application/json";
 
-        ErrorResponse errorResponse = new ErrorResponse(exception.Message, exception.Code);
+        ErrorResponse errorResponse = new() { Error = exception.Message, Code = exception.Code };
 
         response.StatusCode = exception.Code;
 
