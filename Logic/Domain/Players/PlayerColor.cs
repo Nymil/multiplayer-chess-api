@@ -10,19 +10,5 @@ namespace Logic.Domain.Players
     {
         White,
         Black
-    }
-
-    public static class PlayerColorExtensions
-    {
-        public static PlayerColor GetOpponent(this PlayerColor playerColor)
-        {
-            return playerColor switch
-            {
-                PlayerColor.White => PlayerColor.Black,
-                PlayerColor.Black => PlayerColor.White,
-                _ => throw new ArgumentOutOfRangeException(nameof(playerColor), playerColor, "Invalid player color.")
-            };
-        }
-    }
-        
+    }   
 }

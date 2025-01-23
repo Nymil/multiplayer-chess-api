@@ -17,10 +17,10 @@ namespace Logic.Domain
     
         public string Id { get; init; }
         public Board Board { get; init; }
-        public PlayerColor CurrentPlayer { get; private set;} = PlayerColor.White;
+        public Player CurrentPlayer { get; private set;}
         public ChessGameState State { get; private set; } = ChessGameState.Waiting;
 
-        public ICollection<string> Players { get
+        public IEnumerable<string> Players { get
             {
                 if (_playerBlack == null)
                 {
@@ -41,12 +41,29 @@ namespace Logic.Domain
         {
             Id = Guid.NewGuid().ToString();
             Board = new Board();
-            _playerWhite = new Player(username);
+            _playerWhite = new Player(username, PlayerColor.White);
+            CurrentPlayer = _playerWhite;
+        }
+
+        public void JoinGame(string username)
+        {
+            if (_playerBlack != null || State != ChessGameState.Waiting)
+            {
+                throw new ChessIllegalStateException("Game has already started");
+            }
+
+            if (_playerWhite.Username == username)
+            {
+                throw new ChessIllegalStateException("Player with the same name already in game");
+            }
+
+            _playerBlack = new Player(username, PlayerColor.Black);
+            State = ChessGameState.InProgress;
         }
 
         public IEnumerable<Move> LegalMovesForPiece(Position startPosition)
         {
-            if (Board.IsEmpty(startPosition) || Board[startPosition]?.Color != CurrentPlayer)
+            if (Board.IsEmpty(startPosition) || Board[startPosition]?.Color != CurrentPlayer.Color)
             {
                 return Enumerable.Empty<Move>();
             }
@@ -59,7 +76,7 @@ namespace Logic.Domain
         {
             ValidateMove(move);
             move.Execute(Board);
-            CurrentPlayer = CurrentPlayer.GetOpponent();
+            CurrentPlayer = CurrentPlayer == _playerWhite ? _playerBlack! : _playerWhite;
         }
 
         private void ValidateMove(Move move)
