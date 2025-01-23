@@ -24,14 +24,17 @@ namespace MultiplayerChessApi.Controllers
         }
 
         [HttpGet]
-        public OkObjectResult GetGames()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AllGamesResponse>))]
+        public IActionResult GetGames()
         {
             IEnumerable<ChessGame> games = _service.GetGames();
             return Ok(games.Select(_mapper.Map<AllGamesResponse>));
         }
 
         [HttpGet("{id}")]
-        public OkObjectResult GetGame([FromRoute] string id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GameByIdResponse))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorResponse))]
+        public IActionResult GetGame([FromRoute] string id)
         {
             ChessGame game = _service.GetGame(id) ?? throw new ChessNotFoundException($"No game with id {id}");
             GameByIdResponse response = _mapper.Map<GameByIdResponse>(game);
@@ -39,6 +42,8 @@ namespace MultiplayerChessApi.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GameCreatedResponse))]
+        // todo: add other possible error response types
         public IActionResult CreateGame()
         {
             ChessGame newGame = _service.CreateGame();
