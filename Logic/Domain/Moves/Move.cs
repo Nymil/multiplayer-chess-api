@@ -26,6 +26,11 @@ namespace Logic.Domain.Moves
             return HashCode.Combine(Start,End);
         }
 
+        public override string ToString()
+        {
+            return $"{Start}{End}";
+        }
+
         public static bool operator ==(Move? move1, Move? move2)
         {
             return EqualityComparer<Move>.Default.Equals(move1, move2);

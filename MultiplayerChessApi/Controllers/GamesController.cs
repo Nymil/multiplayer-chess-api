@@ -2,9 +2,8 @@ using System.Diagnostics;
 using AutoMapper;
 using Logic.Domain;
 using Logic.Domain.Exceptions;
+using Logic.Domain.Moves;
 using Logic.Service;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MultiplayerChessApi.Requests;
 using MultiplayerChessApi.Response;
@@ -50,6 +49,22 @@ namespace MultiplayerChessApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet("{id}/valid-moves")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ValidMovesResponse))]
+        public IActionResult GetValidMoves([FromRoute] string id, [FromQuery] string position)
+        {
+            ClearCookies();
+
+            ChessGame game = _service.GetGame(id);
+            ValidateCanViewContent(game);
+
+            IEnumerable<Move> validMoves = _service.GetValidMoves(id, position);
+            ValidMovesResponse response = new ValidMovesResponse { // mapper doesn't work starting from collections
+                ValidMoves = validMoves.Select(move => move.ToString()).ToArray()
+            };
+            return Ok(response);
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GameByIdResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorResponse))]
@@ -57,13 +72,8 @@ namespace MultiplayerChessApi.Controllers
         {
             ClearCookies();
 
-            string requestUserUuid = Request.Cookies["UserUUID"] ?? throw new ChessUnauthorizedException("You are not authorized to view this game");
-            ChessGame game = _service.GetGame(id) ?? throw new ChessNotFoundException($"No game with id {id}");
-
-            if (!CanViewContent(game, requestUserUuid))
-            {
-                throw new ChessForbidenException($"You are forbidden to view this game with uuid {requestUserUuid}");
-            }
+            ChessGame game = _service.GetGame(id);
+            ValidateCanViewContent(game);
 
             GameByIdResponse response = _mapper.Map<GameByIdResponse>(game);
             return Ok(response);
@@ -82,7 +92,6 @@ namespace MultiplayerChessApi.Controllers
             ChessGame newGame = _service.CreateGame(username);
             string userUuid = newGame.PlayerWhite.Uuid;
 
-            // send response
             GameCreatedResponse response = _mapper.Map<GameCreatedResponse>(newGame);
             SetCookies(userUuid);
             return CreatedAtAction(nameof(GetGame), new { id = response.GameId }, response);
@@ -98,9 +107,19 @@ namespace MultiplayerChessApi.Controllers
             Response.Cookies.Append("UserUUID", userUuid, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                Secure = false,
                 SameSite = SameSiteMode.Lax
             });
+        }
+
+        private void ValidateCanViewContent(ChessGame game)
+        {
+            string requestUserUuid = Request.Cookies["UserUUID"] ?? throw new ChessUnauthorizedException("You are not authorized to view this game");
+
+            if (!CanViewContent(game, requestUserUuid))
+            {
+                throw new ChessForbidenException($"You are forbidden to view this game with uuid {requestUserUuid}");
+            }
         }
 
         private bool CanViewContent(ChessGame game, string requestUserUuid)

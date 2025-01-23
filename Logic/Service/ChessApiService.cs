@@ -1,5 +1,7 @@
 ﻿using Logic.Domain;
+using Logic.Domain.BoardUtil;
 using Logic.Domain.Exceptions;
+using Logic.Domain.Moves;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +23,9 @@ namespace Logic.Service
             return _games;
         }
 
-        public ChessGame? GetGame(string id)
+        public ChessGame GetGame(string id)
         {
-            return _games.FirstOrDefault(game => game.Id == id);
+            return _games.FirstOrDefault(game => game.Id == id) ?? throw new ChessNotFoundException($"No game with id {id}");
         }
 
         public ChessGame CreateGame(string username)
@@ -35,9 +37,16 @@ namespace Logic.Service
 
         public ChessGame JoinGame(string gameId, string username)
         {
-            ChessGame game = GetGame(gameId) ?? throw new ChessNotFoundException($"No game with id {gameId}");
+            ChessGame game = GetGame(gameId);
             game.JoinGame(username);
             return game;
+        }
+
+        public IEnumerable<Move> GetValidMoves(string gameId, string startPositionString)
+        {
+            ChessGame game = GetGame(gameId);
+            Position startPosition = new Position(startPositionString);
+            return game.LegalMovesForPiece(startPosition);
         }
     }
 }

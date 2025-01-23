@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using Logic.Domain;
+using Logic.Domain.Moves;
 using MultiplayerChessApi.Response;
 
 namespace MultiplayerChessApi.Mapping;
