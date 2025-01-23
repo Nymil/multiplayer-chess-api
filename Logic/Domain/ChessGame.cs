@@ -20,11 +20,28 @@ namespace Logic.Domain
         public PlayerColor CurrentPlayer { get; private set;} = PlayerColor.White;
         public ChessGameState State { get; private set; } = ChessGameState.Waiting;
 
+        public ICollection<string> Players { get
+            {
+                if (_playerBlack == null)
+                {
+                    return new List<string> { _playerWhite.Username };
+                }
+                return new List<string> { _playerWhite.Username, _playerBlack.Username };
+            }
+        }
 
-        public ChessGame()
+        private Player _playerWhite;
+        private Player? _playerBlack;
+
+        public Player PlayerWhite => _playerWhite;
+        public Player? PlayerBlack => _playerBlack;
+
+
+        public ChessGame(string username)
         {
             Id = Guid.NewGuid().ToString();
             Board = new Board();
+            _playerWhite = new Player(username);
         }
 
         public IEnumerable<Move> LegalMovesForPiece(Position startPosition)

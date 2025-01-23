@@ -11,8 +11,8 @@ namespace Logic.Service
     public class ChessApiService : IChessApiService
     {
         private static readonly Lazy<ChessApiService> _instance = new Lazy<ChessApiService>(() => new ChessApiService());
-        private IEnumerable<ChessGame> _games = new List<ChessGame>();
-        public static ChessApiService Instance = _instance.Value;
+        private ICollection<ChessGame> _games = new List<ChessGame>();
+        public static ChessApiService Instance => _instance.Value;
         private ChessApiService() {}
 
         public IEnumerable<ChessGame> GetGames()
@@ -25,10 +25,10 @@ namespace Logic.Service
             return _games.FirstOrDefault(game => game.Id == id);
         }
 
-        public ChessGame CreateGame()
+        public ChessGame CreateGame(string username)
         {
-            ChessGame newGame = new ChessGame();
-            _games = _games.Append(newGame);
+            ChessGame newGame = new ChessGame(username);
+            _games.Add(newGame);
             return newGame;
         }
     }

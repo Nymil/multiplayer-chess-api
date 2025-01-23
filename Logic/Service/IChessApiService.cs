@@ -11,6 +11,6 @@ namespace Logic.Service
     {
         IEnumerable<ChessGame> GetGames();
         ChessGame? GetGame(string gameId);
-        ChessGame CreateGame();
+        ChessGame CreateGame(string username);
     }
 }

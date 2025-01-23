@@ -16,10 +16,12 @@ public class ChessGameProfile : Profile
             .ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Board, opt => opt.MapFrom(src => src.Board.ToSmallFen()))
             .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State.ToString()))
-            .ForMember(dest => dest.CurrentPlayer, opt => opt.MapFrom(src => src.CurrentPlayer.ToString()));
+            .ForMember(dest => dest.CurrentPlayer, opt => opt.MapFrom(src => src.CurrentPlayer.ToString()))
+            .ForMember(dest => dest.Players, opt => opt.MapFrom(src => src.Players));
 
         CreateMap<ChessGame, AllGamesResponse>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State.ToString()));
+            .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State.ToString()))
+            .ForMember(dest => dest.Players, opt => opt.MapFrom(src => src.Players));
     }
 }

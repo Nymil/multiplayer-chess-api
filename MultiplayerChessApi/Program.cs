@@ -1,4 +1,7 @@
+using System.Net;
 using Logic.Service;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using MultiplayerChessApi.Mapping;
 using MultiplayerChessApi.Middleware;
 using MultiplayerChessApi.SchemaFilters;

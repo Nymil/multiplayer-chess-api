@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Domain\BoardUtil\" />
-    <Folder Include="Domain\Players\" />
   </ItemGroup>
 
 </Project>
