@@ -1,4 +1,5 @@
 ﻿using Logic.Domain;
+using Logic.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,13 @@ namespace Logic.Service
             ChessGame newGame = new ChessGame(username);
             _games.Add(newGame);
             return newGame;
+        }
+
+        public ChessGame JoinGame(string gameId, string username)
+        {
+            ChessGame game = GetGame(gameId) ?? throw new ChessNotFoundException($"No game with id {gameId}");
+            game.JoinGame(username);
+            return game;
         }
     }
 }

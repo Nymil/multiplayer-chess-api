@@ -34,16 +34,38 @@ namespace MultiplayerChessApi.Controllers
             return Ok(games.Select(_mapper.Map<AllGamesResponse>));
         }
 
+        [HttpPatch("join/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GameJoinedResponse))]
+        public IActionResult JoinGame([FromRoute] string id, [FromBody] JoinGameRequest request)
+        {
+            ClearCookies();
+            
+            ValidateJoinGameRequest(request);
+            string username = request.Username!.Trim();
+            ChessGame game = _service.JoinGame(id, username);
+            string userUuid = game.PlayerBlack!.Uuid;
+
+            GameJoinedResponse response = _mapper.Map<GameJoinedResponse>(_service.GetGame(id));
+            Response.Cookies.Append("UserUUID", userUuid, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax
+            });
+            return Ok(response);
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GameByIdResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorResponse))]
         public IActionResult GetGame([FromRoute] string id)
         {
             ClearCookies();
+
             string requestUserUuid = Request.Cookies["UserUUID"] ?? throw new ChessUnauthorizedException("You are not authorized to view this game");
             ChessGame game = _service.GetGame(id) ?? throw new ChessNotFoundException($"No game with id {id}");
 
-            if (game.PlayerWhite.Uuid != requestUserUuid && game.PlayerBlack?.Uuid != requestUserUuid)
+            if (!CanViewContent(game, requestUserUuid))
             {
                 throw new ChessForbidenException($"You are forbidden to view this game with uuid {requestUserUuid}");
             }
@@ -81,7 +103,20 @@ namespace MultiplayerChessApi.Controllers
             Response.Cookies.Delete("UserUUID");
         }
 
+        private bool CanViewContent(ChessGame game, string requestUserUuid)
+        {
+            return game.PlayerWhite.Uuid == requestUserUuid || game.PlayerBlack?.Uuid == requestUserUuid;
+        }
+
         private void ValidateCreateGameRequest(CreateGameRequest request)
+        {
+            if (request.Username == null || string.IsNullOrWhiteSpace(request.Username))
+            {
+                throw new ChessBadRequestException("Username is required");
+            }
+        }
+
+        private void ValidateJoinGameRequest(JoinGameRequest request)
         {
             if (request.Username == null || string.IsNullOrWhiteSpace(request.Username))
             {

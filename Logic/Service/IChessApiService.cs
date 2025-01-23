@@ -12,5 +12,6 @@ namespace Logic.Service
         IEnumerable<ChessGame> GetGames();
         ChessGame? GetGame(string gameId);
         ChessGame CreateGame(string username);
+        ChessGame JoinGame(string gameId, string username);
     }
 }

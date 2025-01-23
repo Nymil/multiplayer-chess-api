@@ -23,5 +23,8 @@ public class ChessGameProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State.ToString()))
             .ForMember(dest => dest.Players, opt => opt.MapFrom(src => src.Players));
+
+        CreateMap<ChessGame, GameJoinedResponse>()
+            .ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Id));
     }
 }
