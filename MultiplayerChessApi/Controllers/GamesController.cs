@@ -46,12 +46,7 @@ namespace MultiplayerChessApi.Controllers
             string userUuid = game.PlayerBlack!.Uuid;
 
             GameJoinedResponse response = _mapper.Map<GameJoinedResponse>(_service.GetGame(id));
-            Response.Cookies.Append("UserUUID", userUuid, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Lax
-            });
+            SetCookies(userUuid);
             return Ok(response);
         }
 
@@ -89,18 +84,23 @@ namespace MultiplayerChessApi.Controllers
 
             // send response
             GameCreatedResponse response = _mapper.Map<GameCreatedResponse>(newGame);
-            Response.Cookies.Append("UserUUID", userUuid, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Lax
-            });
+            SetCookies(userUuid);
             return CreatedAtAction(nameof(GetGame), new { id = response.GameId }, response);
         }
 
         private void ClearCookies()
         {
             Response.Cookies.Delete("UserUUID");
+        }
+
+        private void SetCookies(string userUuid)
+        {
+            Response.Cookies.Append("UserUUID", userUuid, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax
+            });
         }
 
         private bool CanViewContent(ChessGame game, string requestUserUuid)
