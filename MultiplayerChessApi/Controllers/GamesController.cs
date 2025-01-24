@@ -31,7 +31,7 @@ namespace MultiplayerChessApi.Controllers
             return Ok(games.Select(_mapper.Map<AllGamesResponse>));
         }
 
-        [HttpPatch("join/{id}")]
+        [HttpPatch("{id}/join")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GameJoinedResponse))]
         public IActionResult JoinGame([FromRoute] string id, [FromBody] JoinGameRequest request)
         {            
@@ -94,11 +94,11 @@ namespace MultiplayerChessApi.Controllers
             ValidateExecuteMoveRequest(request);
 
             ChessGame game = _service.GetGame(id);
-            ValidateCanExecuteMove(game);
+            // ValidateCanExecuteMove(game);
 
             _service.ExecuteMove(id, request.Move!);
 
-            GameByIdResponse response = _mapper.Map<GameByIdResponse>(_service.GetGame(id));
+            GameByIdResponse response = _mapper.Map<GameByIdResponse>(game);
             return Ok(response);
         }
 

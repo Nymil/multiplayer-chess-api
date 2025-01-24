@@ -64,7 +64,7 @@ namespace Logic.Domain
 
         public IEnumerable<Move> LegalMovesForPiece(Position startPosition)
         {
-            if (Board.IsEmpty(startPosition) || Board[startPosition]?.Color != CurrentPlayer.Color)
+            if (Board.IsEmpty(startPosition) || Board[startPosition]!.Color != CurrentPlayer.Color)
             {
                 return Enumerable.Empty<Move>();
             }
@@ -79,6 +79,7 @@ namespace Logic.Domain
             ValidateMove(move);
             move.Execute(Board);
             CurrentPlayer = CurrentPlayer == _playerWhite ? _playerBlack! : _playerWhite;
+            CheckForGameOver();
         }
 
         public IEnumerable<Move> AllLegalMovesFor(PlayerColor color)
@@ -112,15 +113,15 @@ namespace Logic.Domain
 
         private void ValidateMove(Move move)
         {
+            if (State != ChessGameState.InProgress)
+            {
+                throw new ChessIllegalStateException("Game is not in progress");
+            }
+
             IEnumerable<Move> legalMoves = LegalMovesForPiece(move.Start);
             if (!legalMoves.Contains(move))
             {
                 throw new ChessIllegalStateException("Illegal move");
-            }
-
-            if (State != ChessGameState.InProgress)
-            {
-                throw new ChessIllegalStateException("Game is not in progress");
             }
         }
     }
