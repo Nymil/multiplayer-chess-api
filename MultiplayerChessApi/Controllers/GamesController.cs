@@ -27,8 +27,6 @@ namespace MultiplayerChessApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AllGamesResponse>))]
         public IActionResult GetGames()
         {
-            ClearCookies();
-
             IEnumerable<ChessGame> games = _service.GetGames();
             return Ok(games.Select(_mapper.Map<AllGamesResponse>));
         }
@@ -36,9 +34,7 @@ namespace MultiplayerChessApi.Controllers
         [HttpPatch("join/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GameJoinedResponse))]
         public IActionResult JoinGame([FromRoute] string id, [FromBody] JoinGameRequest request)
-        {
-            ClearCookies();
-            
+        {            
             ValidateJoinGameRequest(request);
             string username = request.Username!.Trim();
             ChessGame game = _service.JoinGame(id, username);
@@ -53,8 +49,6 @@ namespace MultiplayerChessApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ValidMovesResponse))]
         public IActionResult GetValidMoves([FromRoute] string id, [FromQuery] string position)
         {
-            ClearCookies();
-
             ChessGame game = _service.GetGame(id);
             ValidateCanViewContent(game);
 
@@ -70,8 +64,6 @@ namespace MultiplayerChessApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorResponse))]
         public IActionResult GetGame([FromRoute] string id)
         {
-            ClearCookies();
-
             ChessGame game = _service.GetGame(id);
             ValidateCanViewContent(game);
 
@@ -84,8 +76,6 @@ namespace MultiplayerChessApi.Controllers
         // todo: add other possible error response types
         public IActionResult CreateGame([FromBody] CreateGameRequest request)
         {
-            ClearCookies();
-
             ValidateCreateGameRequest(request);
             string username = request.Username!.Trim();
 
@@ -95,11 +85,6 @@ namespace MultiplayerChessApi.Controllers
             GameCreatedResponse response = _mapper.Map<GameCreatedResponse>(newGame);
             SetCookies(userUuid);
             return CreatedAtAction(nameof(GetGame), new { id = response.GameId }, response);
-        }
-
-        private void ClearCookies()
-        {
-            Response.Cookies.Delete("UserUUID");
         }
 
         private void SetCookies(string userUuid)
