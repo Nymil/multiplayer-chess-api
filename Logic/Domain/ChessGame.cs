@@ -69,7 +69,8 @@ namespace Logic.Domain
             }
 
             Piece piece = Board[startPosition]!;
-            return piece.GetMoves(startPosition, Board);
+            IEnumerable<Move> moveCandidates = piece.GetMoves(startPosition, Board);
+            return moveCandidates.Where(move => move.IsLegal(Board));
         }
 
         public void MakeMove(Move move)

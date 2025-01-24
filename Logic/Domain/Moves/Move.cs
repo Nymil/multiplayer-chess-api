@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Logic.Domain.BoardUtil;
 using Logic.Domain.Exceptions;
+using Logic.Domain.Players;
 
 namespace Logic.Domain.Moves
 {
@@ -20,6 +21,14 @@ namespace Logic.Domain.Moves
             return obj is Move otherMove &&
                    Start == otherMove.Start &&
                    End == otherMove.End;
+        }
+
+        public virtual bool IsLegal(Board board)
+        {
+            PlayerColor playerColor = board[Start]!.Color;
+            Board boardCopy = board.Copy();
+            Execute(boardCopy);
+            return !boardCopy.IsInCheck(playerColor);
         }
 
         public override int GetHashCode()

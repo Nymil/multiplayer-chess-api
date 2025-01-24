@@ -84,5 +84,13 @@ namespace Logic.Domain.Pieces
         {
             return ForwardMoves(startPosition, board).Concat(CaptureMoves(startPosition, board));
         }
+
+        public override bool CanCaptureOpponentKing(Position startPosition, Board board)
+        {
+            return CaptureMoves(startPosition, board).Any(move => {
+                Piece? piece = board[move.End];
+                return piece != null && piece.Type == PieceType.King;
+            });
+        }
     }
 }

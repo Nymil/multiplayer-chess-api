@@ -10,5 +10,13 @@ namespace Logic.Domain.Players
     {
         White,
         Black
-    }   
+    }
+
+    public static class PlayerColorExtensions
+    {
+        public static PlayerColor GetOpponent(this PlayerColor color)
+        {
+            return color == PlayerColor.White ? PlayerColor.Black : PlayerColor.White;
+        }
+    }
 }

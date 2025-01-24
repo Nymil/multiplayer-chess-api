@@ -42,6 +42,15 @@ namespace Logic.Domain.Pieces
             return directions.SelectMany(dir => MovePositionsOfDirection(startPosition, board, dir));
         }
 
+        public virtual bool CanCaptureOpponentKing(Position startPosition, Board board)
+        {
+            return GetMoves(startPosition, board).Any(move => // get moves will always get opponents
+            {
+                Piece? piece = board[move.End];
+                return piece != null && piece.Type == PieceType.King;
+            });
+        }
+
         public char ToFen()
         {
             return Color switch

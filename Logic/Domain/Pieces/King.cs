@@ -74,5 +74,14 @@ namespace Logic.Domain.Pieces
                 yield return new BasicMove(startPosition, endPosition);
             }
         }
+
+        // override because castling can not capture an opponent king
+        public override bool CanCaptureOpponentKing(Position startPosition, Board board)
+        {
+            return MovePositions(startPosition, board).Any(endPosition => {
+                Piece? piece = board[endPosition];
+                return piece != null && piece.Type == PieceType.King;
+            });
+        }
     }
 }
