@@ -15,5 +15,6 @@ namespace Logic.Service
         ChessGame CreateGame(string username);
         ChessGame JoinGame(string gameId, string username);
         IEnumerable<Move> GetValidMoves(string gameId, string startPositionString);
+        ChessGame ExecuteMove(string gameId, string moveString);
     }
 }

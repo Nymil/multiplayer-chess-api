@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using Logic.Domain.BoardUtil;
+using Logic.Domain.Exceptions;
 
 namespace Logic.Domain.Moves
 {
@@ -39,6 +40,19 @@ namespace Logic.Domain.Moves
         public static bool operator !=(Move? move1, Move? move2)
         {
             return !(move1 == move2);
+        }
+
+        public static void ValidateMoveString(string moveString)
+        {
+            if (moveString.Length != 4)
+            {
+                throw new ChessBadRequestException("Move string must be four characters long");
+            }
+
+            // testing if the first and second characters are valid positions
+            // constructor woudl throw error if invalid
+            _ = new Position(moveString[..2]);
+            _ = new Position(moveString.Substring(2, 2));
         }
     }
 }

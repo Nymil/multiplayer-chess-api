@@ -87,6 +87,21 @@ namespace MultiplayerChessApi.Controllers
             return CreatedAtAction(nameof(GetGame), new { id = response.GameId }, response);
         }
 
+        [HttpPatch("{id}/move")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GameByIdResponse))]
+        public IActionResult ExecuteMove([FromRoute] string id, [FromBody] ExecuteMoveRequest request)
+        {
+            ValidateExecuteMoveRequest(request);
+
+            ChessGame game = _service.GetGame(id);
+            ValidateCanExecuteMove(game);
+
+            _service.ExecuteMove(id, request.Move!);
+
+            GameByIdResponse response = _mapper.Map<GameByIdResponse>(_service.GetGame(id));
+            return Ok(response);
+        }
+
         private void SetCookies(string userUuid)
         {
             Response.Cookies.Append("UserUUID", userUuid, new CookieOptions
@@ -104,6 +119,16 @@ namespace MultiplayerChessApi.Controllers
             if (!CanViewContent(game, requestUserUuid))
             {
                 throw new ChessForbidenException($"You are forbidden to view this game with uuid {requestUserUuid}");
+            }
+        }
+
+        private void ValidateCanExecuteMove(ChessGame game)
+        {
+            ValidateCanViewContent(game);
+            string requestUserUuid = Request.Cookies["UserUUID"]!;
+            if (game.CurrentPlayer.Uuid != requestUserUuid)
+            {
+                throw new ChessForbidenException("It's not your turn");
             }
         }
 
@@ -125,6 +150,14 @@ namespace MultiplayerChessApi.Controllers
             if (request.Username == null || string.IsNullOrWhiteSpace(request.Username))
             {
                 throw new ChessBadRequestException("Username is required");
+            }
+        }
+
+        private void ValidateExecuteMoveRequest(ExecuteMoveRequest request)
+        {
+            if (request.Move == null || string.IsNullOrWhiteSpace(request.Move))
+            {
+                throw new ChessBadRequestException("Move is required");
             }
         }
     }

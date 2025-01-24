@@ -42,6 +42,21 @@ namespace Logic.Service
             return game;
         }
 
+        public ChessGame ExecuteMove(string gameId, string moveString)
+        {
+            ChessGame game = GetGame(gameId);
+
+            Move.ValidateMoveString(moveString);
+            string startPositionString = moveString[..2];
+            Position startPosition = new(startPositionString);
+
+            Move move = game.LegalMovesForPiece(startPosition).FirstOrDefault(m => m.ToString() == moveString)
+                ?? throw new ChessBadRequestException("Illegal move");
+
+            game.MakeMove(move);
+            return game;
+        }
+
         public IEnumerable<Move> GetValidMoves(string gameId, string startPositionString)
         {
             ChessGame game = GetGame(gameId);
