@@ -19,6 +19,7 @@ namespace Logic.Domain
         public Board Board { get; init; }
         public Player CurrentPlayer { get; private set;}
         public ChessGameState State { get; private set; } = ChessGameState.Waiting;
+        public Result? Result { get; private set; } = null;
 
         public IEnumerable<string> Players { get
             {
@@ -78,6 +79,35 @@ namespace Logic.Domain
             ValidateMove(move);
             move.Execute(Board);
             CurrentPlayer = CurrentPlayer == _playerWhite ? _playerBlack! : _playerWhite;
+        }
+
+        public IEnumerable<Move> AllLegalMovesFor(PlayerColor color)
+        {
+            IEnumerable<Move> moveCandidates = Board.PiecePositionsFor(color).SelectMany(pos => {
+                Piece? piece = Board[pos];
+                return piece?.GetMoves(pos, Board) ?? Enumerable.Empty<Move>();
+            });
+
+            return moveCandidates.Where(move => move.IsLegal(Board));
+        }
+
+        // called after each move after player swap
+        private void CheckForGameOver()
+        {
+            if (!AllLegalMovesFor(CurrentPlayer.Color).Any())
+            {
+                State = ChessGameState.Finished;
+
+                if (Board.IsInCheck(CurrentPlayer.Color))
+                {
+                    Player opponent = CurrentPlayer == _playerWhite ? _playerBlack! : _playerWhite;
+                    Result = Result.Win(opponent);
+                }
+                else
+                {
+                    Result = Result.Draw(EndReason.Stalemate);
+                }
+            }
         }
 
         private void ValidateMove(Move move)

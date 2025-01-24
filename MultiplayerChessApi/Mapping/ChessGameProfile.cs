@@ -18,7 +18,8 @@ public class ChessGameProfile : Profile
             .ForMember(dest => dest.Board, opt => opt.MapFrom(src => src.Board.ToSmallFen()))
             .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State.ToString()))
             .ForMember(dest => dest.CurrentPlayer, opt => opt.MapFrom(src => src.CurrentPlayer.Username))
-            .ForMember(dest => dest.Players, opt => opt.MapFrom(src => src.Players));
+            .ForMember(dest => dest.Players, opt => opt.MapFrom(src => src.Players))
+            .ForMember(dest => dest.Result, opt => opt.ConvertUsing(new GameResultResponseConverter()));
 
         CreateMap<ChessGame, AllGamesResponse>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -27,5 +28,22 @@ public class ChessGameProfile : Profile
 
         CreateMap<ChessGame, GameJoinedResponse>()
             .ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Id));
+    }
+}
+
+public class GameResultResponseConverter : IValueConverter<Result?, GameResultResponse?>
+{
+    public GameResultResponse? Convert(Result? source, ResolutionContext context)
+    {
+        if (source == null)
+        {
+            return null;
+        }
+
+        return new GameResultResponse
+        {
+            Winner = source.Winner?.Username,
+            Reason = source.Reason.ToString()
+        };
     }
 }
