@@ -12,6 +12,12 @@ namespace Logic.Domain.BoardUtil
     {
         private readonly Piece?[,] _pieces = new Piece[8, 8];
 
+        private readonly Dictionary<PlayerColor, Position?> _pawnSkipPositions = new Dictionary<PlayerColor, Position?>()
+        {
+            { PlayerColor.White, null },
+            { PlayerColor.Black, null }
+        };
+
         public Piece? this[int col, int row]
         {
             get { return _pieces[col, row]; }
@@ -22,6 +28,16 @@ namespace Logic.Domain.BoardUtil
         {
             get { return _pieces[position.Col, position.Row]; }
             set { _pieces[position.Col, position.Row] = value; }
+        }
+
+        public Position? GetPawnSkipPosition(PlayerColor color)
+        {
+            return _pawnSkipPositions[color];
+        }
+
+        public void SetPawnSkipPosition(PlayerColor color, Position? position)
+        {
+            _pawnSkipPositions[color] = position;
         }
 
         public Board()

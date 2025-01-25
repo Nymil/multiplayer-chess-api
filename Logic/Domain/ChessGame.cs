@@ -77,6 +77,8 @@ namespace Logic.Domain
         public void MakeMove(Move move)
         {
             ValidateMove(move);
+
+            Board.SetPawnSkipPosition(CurrentPlayer.Color, null);
             move.Execute(Board);
             CurrentPlayer = CurrentPlayer == _playerWhite ? _playerBlack! : _playerWhite;
             CheckForGameOver();

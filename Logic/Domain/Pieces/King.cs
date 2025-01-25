@@ -53,11 +53,11 @@ namespace Logic.Domain.Pieces
                 return false;
             }
 
-            Position rookPos = new Position(start.Row, 7);
+            Position rookPos = new Position(7, start.Row);
             Position[] betweenPositions = new Position[]
             {
-                new(start.Row, 5),
-                new(start.Row, 6)
+                new(5, start.Row),
+                new(6, start.Row)
             };
 
             return IsUnmovedRook(rookPos, board) && AllEmpty(betweenPositions, board);
@@ -70,12 +70,12 @@ namespace Logic.Domain.Pieces
                 return false;
             }
 
-            Position rookPos = new Position(start.Row, 0);
+            Position rookPos = new Position(0, start.Row);
             Position[] betweenPositions = new Position[]
             {
-                new(start.Row, 1),
-                new(start.Row, 2),
-                new(start.Row, 3)
+                new(1, start.Row),
+                new(2, start.Row),
+                new(3, start.Row)
             };
 
             return IsUnmovedRook(rookPos, board) && AllEmpty(betweenPositions, board);

@@ -81,7 +81,7 @@ namespace Logic.Domain.Pieces
                 Position doubleForwardPosition = forwardPosition + _forward;
                 if (!HasMoved && CanMoveTo(doubleForwardPosition, board))
                 {
-                    yield return new BasicMove(startPosition, doubleForwardPosition);
+                    yield return new DoublePawn(startPosition, doubleForwardPosition);
                 }
             }
         }
@@ -92,7 +92,11 @@ namespace Logic.Domain.Pieces
             {
                 Position endPosition = startPosition + _forward + dir;
 
-                if (CanCaptureAt(endPosition, board))
+                if (endPosition == board.GetPawnSkipPosition(Color.GetOpponent()))
+                {
+                    yield return new EnPassant(startPosition, endPosition);
+                }
+                else if (CanCaptureAt(endPosition, board))
                 {
                     if (endPosition.Row == 0 || endPosition.Row == 7)
                     {

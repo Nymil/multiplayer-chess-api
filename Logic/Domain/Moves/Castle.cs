@@ -23,16 +23,16 @@ public class Castle : Move
         if (type == MoveType.CastleKS)
         {
             KingMoveDir = Direction.East;
-            End = new Position(kingPos.Row, 6);
-            rookStartPos = new Position(kingPos.Row, 7);
-            rookEndPos = new Position(kingPos.Row, 5);
+            End = new Position(6, kingPos.Row);
+            rookStartPos = new Position(7, kingPos.Row);
+            rookEndPos = new Position(5, kingPos.Row);
         }
         else if (type == MoveType.CasltQS)
         {
             KingMoveDir = Direction.West;
-            End = new Position(kingPos.Row, 2);
-            rookStartPos = new Position(kingPos.Row, 0);
-            rookEndPos = new Position(kingPos.Row, 3);
+            End = new Position(2, kingPos.Row);
+            rookStartPos = new Position(0, kingPos.Row);
+            rookEndPos = new Position(3, kingPos.Row);
         }
         else
         {
