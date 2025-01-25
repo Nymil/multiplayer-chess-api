@@ -2,6 +2,7 @@
 using Logic.Domain.BoardUtil;
 using Logic.Domain.Exceptions;
 using Logic.Domain.Moves;
+using Logic.Domain.Pieces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace Logic.Service
             return game;
         }
 
-        public ChessGame ExecuteMove(string gameId, string moveString)
+        public ChessGame ExecuteMove(string gameId, string moveString, string? promotionPiece)
         {
             ChessGame game = GetGame(gameId);
 
@@ -50,8 +51,21 @@ namespace Logic.Service
             string startPositionString = moveString[..2];
             Position startPosition = new(startPositionString);
 
-            Move move = game.LegalMovesForPiece(startPosition).FirstOrDefault(m => m.ToString() == moveString)
+            IEnumerable<Move> legalMoves = game.LegalMovesForPiece(startPosition);
+            Move move = legalMoves.FirstOrDefault(m => m.ToString() == moveString)
                 ?? throw new ChessBadRequestException("Illegal move");
+
+            if (move is PawnPromotion)
+            {
+                if (promotionPiece == null)
+                {
+                    throw new ChessBadRequestException("Promotion piece must be specified");
+                }
+
+                PieceType promotionType = PieceTypeExtensions.PromotionPieceFromString(promotionPiece);
+                move = legalMoves.FirstOrDefault(m => m is PawnPromotion pp && pp.NewType == promotionType)
+                    ?? throw new ChessBadRequestException("Invalid promotion piece");
+            }
 
             game.MakeMove(move);
             return game;

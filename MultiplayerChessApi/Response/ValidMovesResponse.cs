@@ -4,5 +4,6 @@ namespace MultiplayerChessApi.Response;
 
 public class ValidMovesResponse
 {
-    public required string[] ValidMoves { get; init; }
+    // hashset for only unique moves to be shown
+    public required HashSet<string> ValidMoves { get; init; }
 }

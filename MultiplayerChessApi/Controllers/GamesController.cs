@@ -54,7 +54,7 @@ namespace MultiplayerChessApi.Controllers
 
             IEnumerable<Move> validMoves = _service.GetValidMoves(id, position);
             ValidMovesResponse response = new ValidMovesResponse { // mapper doesn't work starting from collections
-                ValidMoves = validMoves.Select(move => move.ToString()).ToArray()
+                ValidMoves = validMoves.Select(move => move.ToString()).ToHashSet()
             };
             return Ok(response);
         }
@@ -89,14 +89,14 @@ namespace MultiplayerChessApi.Controllers
 
         [HttpPatch("{id}/move")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GameByIdResponse))]
-        public IActionResult ExecuteMove([FromRoute] string id, [FromBody] ExecuteMoveRequest request)
+        public IActionResult ExecuteMove([FromRoute] string id, [FromBody] ExecuteMoveRequest request, [FromQuery] string? promotionPiece)
         {
             ValidateExecuteMoveRequest(request);
 
             ChessGame game = _service.GetGame(id);
             // ValidateCanExecuteMove(game);
 
-            _service.ExecuteMove(id, request.Move!);
+            _service.ExecuteMove(id, request.Move!, promotionPiece?.Trim('"'));
 
             GameByIdResponse response = _mapper.Map<GameByIdResponse>(game);
             return Ok(response);

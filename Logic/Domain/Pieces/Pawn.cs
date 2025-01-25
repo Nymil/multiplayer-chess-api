@@ -52,12 +52,31 @@ namespace Logic.Domain.Pieces
             return piece.Color != Color;
         }
 
+        private static IEnumerable<Move> PromotionMoves(Position startPosition, Position endPosition)
+        {
+            yield return new PawnPromotion(startPosition, endPosition, PieceType.Knight);
+            yield return new PawnPromotion(startPosition, endPosition, PieceType.Rook);
+            yield return new PawnPromotion(startPosition, endPosition, PieceType.Bishop);
+            yield return new PawnPromotion(startPosition, endPosition, PieceType.Queen);
+        }
+
         private IEnumerable<Move> ForwardMoves(Position startPosition, Board board  )
         {
             Position forwardPosition = startPosition + _forward;
+
             if (CanMoveTo(forwardPosition, board))
             {
-                yield return new BasicMove(startPosition, forwardPosition);
+                if (forwardPosition.Row == 0 || forwardPosition.Row == 7)
+                {
+                    foreach (Move promotionMove in PromotionMoves(startPosition, forwardPosition))
+                    {
+                        yield return promotionMove;
+                    }
+                }
+                else
+                {
+                    yield return new BasicMove(startPosition, forwardPosition);
+                }
 
                 Position doubleForwardPosition = forwardPosition + _forward;
                 if (!HasMoved && CanMoveTo(doubleForwardPosition, board))
@@ -75,7 +94,17 @@ namespace Logic.Domain.Pieces
 
                 if (CanCaptureAt(endPosition, board))
                 {
-                    yield return new BasicMove(startPosition, endPosition);
+                    if (endPosition.Row == 0 || endPosition.Row == 7)
+                    {
+                        foreach (Move promotionMove in PromotionMoves(startPosition, endPosition))
+                        {
+                            yield return promotionMove;
+                        }
+                    }
+                    else
+                    {
+                        yield return new BasicMove(startPosition, endPosition);
+                    }
                 }
             }
         }

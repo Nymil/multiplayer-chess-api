@@ -31,9 +31,11 @@ namespace Logic.Domain.BoardUtil
 
         private void AddStartPieces()
         {
-            AddNonPawnPiecesForColor(PlayerColor.White);
-            AddNonPawnPiecesForColor(PlayerColor.Black);
-            AddNonPawnPieces();
+            this[4, 3] = new Queen(PlayerColor.White);
+
+            // AddNonPawnPiecesForColor(PlayerColor.White);
+            // AddNonPawnPiecesForColor(PlayerColor.Black);
+            // AddNonPawnPieces();
         }
 
         private void AddNonPawnPiecesForColor(PlayerColor color)
