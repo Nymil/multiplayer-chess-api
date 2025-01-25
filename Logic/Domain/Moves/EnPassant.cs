@@ -1,5 +1,6 @@
 using System;
 using Logic.Domain.BoardUtil;
+using Logic.Domain.Pieces;
 
 namespace Logic.Domain.Moves;
 
@@ -21,8 +22,10 @@ public class EnPassant : Move
     public override bool Execute(Board board)
     {
         new BasicMove(Start, End).Execute(board);
+        Piece capturedPiece = board[_capturePos]!;
         board[_capturePos] = null;
 
+        board.AddCapturedPiece(capturedPiece);
         return true;
     }
 }

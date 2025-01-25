@@ -26,9 +26,12 @@ namespace Logic.Domain.Moves
         {
             Piece piece = board[Start] ?? throw new ChessIllegalStateException("No piece at start location to move");
             bool capture = !board.IsEmpty(End);
+            Piece? capturedPiece = board[End];
             board[End] = piece;
             board[Start] = null;
             piece.HasMoved = true;
+
+            if (capturedPiece != null) board.AddCapturedPiece(capturedPiece);
             return capture || piece.Type == PieceType.Pawn;
         }
     }

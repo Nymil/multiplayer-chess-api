@@ -10,6 +10,9 @@ namespace Logic.Domain.BoardUtil
     {
         private readonly Piece?[,] _pieces = new Piece[8, 8];
 
+        private readonly ICollection<Piece> _capturedPieces = new List<Piece>();
+        public IEnumerable<Piece> CapturedPieces => _capturedPieces;
+
         private readonly Dictionary<PlayerColor, Position?> _pawnSkipPositions = new Dictionary<PlayerColor, Position?>()
         {
             { PlayerColor.White, null },
@@ -48,6 +51,11 @@ namespace Logic.Domain.BoardUtil
             AddNonPawnPiecesForColor(PlayerColor.White);
             AddNonPawnPiecesForColor(PlayerColor.Black);
             AddNonPawnPieces();
+        }
+
+        public void AddCapturedPiece(Piece piece)
+        {
+            _capturedPieces.Add(piece);
         }
 
         private void AddNonPawnPiecesForColor(PlayerColor color)
