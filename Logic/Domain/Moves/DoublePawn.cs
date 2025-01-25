@@ -19,10 +19,12 @@ public class DoublePawn : Move
         _skippedPos = new Position(start.Col, (start.Row + end.Row) / 2);
     }
 
-    public override void Execute(Board board)
+    public override bool Execute(Board board)
     {
         PlayerColor color = board[Start]!.Color;
         board.SetPawnSkipPosition(color, _skippedPos);
         new BasicMove(Start, End).Execute(board);
+
+        return true;
     }
 }

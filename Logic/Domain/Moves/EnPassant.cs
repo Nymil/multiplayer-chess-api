@@ -18,9 +18,11 @@ public class EnPassant : Move
         _capturePos = new Position(end.Col, start.Row);
     }
 
-    public override void Execute(Board board)
+    public override bool Execute(Board board)
     {
         new BasicMove(Start, End).Execute(board);
         board[_capturePos] = null;
+
+        return true;
     }
 }

@@ -33,7 +33,7 @@ public class PawnPromotion : Move
         };
     }
 
-    public override void Execute(Board board)
+    public override bool Execute(Board board)
     {
         Piece pawn = board[Start]!;
         board[End] = null;
@@ -42,5 +42,7 @@ public class PawnPromotion : Move
         promotionPiece.HasMoved = true;
         board[End] = promotionPiece;
         board[Start] = null;
+
+        return true;
     }
 }

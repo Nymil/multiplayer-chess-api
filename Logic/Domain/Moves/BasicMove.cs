@@ -22,12 +22,14 @@ namespace Logic.Domain.Moves
             End = end;
         }
 
-        public override void Execute(Board board)
+        public override bool Execute(Board board)
         {
             Piece piece = board[Start] ?? throw new ChessIllegalStateException("No piece at start location to move");
+            bool capture = !board.IsEmpty(End);
             board[End] = piece;
             board[Start] = null;
             piece.HasMoved = true;
+            return capture || piece.Type == PieceType.Pawn;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Logic.Domain.Moves
         public abstract MoveType Type { get; }
         public abstract Position Start { get; init; }
         public abstract Position End { get; init; }
-        public abstract void Execute(Board board);
+        public abstract bool Execute(Board board);
         public override bool Equals(object? obj)
         {
             return obj is Move otherMove &&

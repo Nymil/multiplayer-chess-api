@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,8 @@ namespace Logic.Domain
         public Player CurrentPlayer { get; private set;}
         public ChessGameState State { get; private set; } = ChessGameState.Waiting;
         public Result? Result { get; private set; } = null;
+
+        private int _noCaptureOrPawnMoves = 0;
 
         public IEnumerable<string> Players { get
             {
@@ -79,7 +82,17 @@ namespace Logic.Domain
             ValidateMove(move);
 
             Board.SetPawnSkipPosition(CurrentPlayer.Color, null);
-            move.Execute(Board);
+            bool captureOrPawn = move.Execute(Board);
+
+            if (captureOrPawn)
+            {
+                _noCaptureOrPawnMoves = 0;
+            }
+            else
+            {
+                _noCaptureOrPawnMoves++;
+            }
+
             CurrentPlayer = CurrentPlayer == _playerWhite ? _playerBlack! : _playerWhite;
             CheckForGameOver();
         }
@@ -116,6 +129,11 @@ namespace Logic.Domain
                 State = ChessGameState.Finished;
                 Result = Result.Draw(EndReason.InsufficientMaterial);
             }
+            else if (FiftyMoveRule())
+            {
+                State = ChessGameState.Finished;
+                Result = Result.Draw(EndReason.FiftyMoveRule);
+            }
         }
 
         private void ValidateMove(Move move)
@@ -130,6 +148,12 @@ namespace Logic.Domain
             {
                 throw new ChessIllegalStateException("Illegal move");
             }
+        }
+
+        private bool FiftyMoveRule()
+        {
+            int fullMoves = _noCaptureOrPawnMoves / 2;
+            return fullMoves >= 50;
         }
     }
 }

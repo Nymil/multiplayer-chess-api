@@ -40,10 +40,12 @@ public class Castle : Move
         }
     }
 
-    public override void Execute(Board board)
+    public override bool Execute(Board board)
     {
         new BasicMove(Start, End).Execute(board);
         new BasicMove(rookStartPos, rookEndPos).Execute(board);
+
+        return false;
     }
 
     public override bool IsLegal(Board board)
