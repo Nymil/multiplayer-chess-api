@@ -111,6 +111,11 @@ namespace Logic.Domain
                     Result = Result.Draw(EndReason.Stalemate);
                 }
             }
+            else if (Board.InsufficientMaterial())
+            {
+                State = ChessGameState.Finished;
+                Result = Result.Draw(EndReason.InsufficientMaterial);
+            }
         }
 
         private void ValidateMove(Move move)

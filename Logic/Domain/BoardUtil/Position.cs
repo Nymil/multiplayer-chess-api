@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Logic.Domain.Exceptions;
+using Logic.Domain.Players;
 
 namespace Logic.Domain.BoardUtil
 {
@@ -45,6 +46,11 @@ namespace Logic.Domain.BoardUtil
             {
                 throw new ChessBadRequestException("Position string must be within the range 'a1' to 'h8'");
             }
+        }
+
+        public PlayerColor SquareColor()
+        {
+            return (Row + Col) % 2 == 0 ? PlayerColor.White : PlayerColor.Black;
         }
 
         public override bool Equals(object? obj)
