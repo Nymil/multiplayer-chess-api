@@ -30,6 +30,57 @@ namespace Logic.Domain.Pieces
             Color = color;
         }
 
+        // no piece color check because will only be called with position of a rook of correct color
+        public static bool IsUnmovedRook(Position pos, Board board)
+        {
+            if (board.IsEmpty(pos))
+            {
+                return false;
+            }
+            Piece piece = board[pos]!;
+            return piece.Type == PieceType.Rook && !piece.HasMoved;
+        }
+
+        private static bool AllEmpty(IEnumerable<Position> positions, Board board)
+        {
+            return positions.All(board.IsEmpty);
+        }
+
+        private bool CanCastleKingSide(Position start, Board board)
+        {
+            if (HasMoved)
+            {
+                return false;
+            }
+
+            Position rookPos = new Position(start.Row, 7);
+            Position[] betweenPositions = new Position[]
+            {
+                new(start.Row, 5),
+                new(start.Row, 6)
+            };
+
+            return IsUnmovedRook(rookPos, board) && AllEmpty(betweenPositions, board);
+        }
+
+        private bool CanCasleQueenSide(Position start, Board board)
+        {
+            if (HasMoved)
+            {
+                return false;
+            }
+
+            Position rookPos = new Position(start.Row, 0);
+            Position[] betweenPositions = new Position[]
+            {
+                new(start.Row, 1),
+                new(start.Row, 2),
+                new(start.Row, 3)
+            };
+
+            return IsUnmovedRook(rookPos, board) && AllEmpty(betweenPositions, board);
+        }
+
         public override Piece Copy()
         {
             King copy = new King(Color);
@@ -68,10 +119,19 @@ namespace Logic.Domain.Pieces
 
         public override IEnumerable<Move> GetMoves(Position startPosition, Board board)
         {
-            // TODO: castling later
             foreach (Position endPosition in MovePositions(startPosition, board))
             {
                 yield return new BasicMove(startPosition, endPosition);
+            }
+
+            if (CanCastleKingSide(startPosition, board))
+            {
+                yield return new Castle(MoveType.CastleKS, startPosition);
+            }
+
+            if (CanCasleQueenSide(startPosition, board))
+            {
+                yield return new Castle(MoveType.CasltQS, startPosition);
             }
         }
 
