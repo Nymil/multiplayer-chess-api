@@ -22,6 +22,8 @@ namespace Logic.Domain
         public ChessGameState State { get; private set; } = ChessGameState.Waiting;
         public Result? Result { get; private set; } = null;
 
+        private readonly Dictionary<string, int> _stateHistory = new Dictionary<string, int>();
+
         private int _noCaptureOrPawnMoves = 0;
 
         public IEnumerable<string> Players { get
@@ -47,6 +49,8 @@ namespace Logic.Domain
             Board = new Board();
             _playerWhite = new Player(username, PlayerColor.White);
             CurrentPlayer = _playerWhite;
+
+            _stateHistory[Board.ToFen(CurrentPlayer.Color)] = 1;
         }
 
         public void JoinGame(string username)
@@ -87,6 +91,7 @@ namespace Logic.Domain
             if (captureOrPawn)
             {
                 _noCaptureOrPawnMoves = 0;
+                _stateHistory.Clear();
             }
             else
             {
@@ -94,6 +99,7 @@ namespace Logic.Domain
             }
 
             CurrentPlayer = CurrentPlayer == _playerWhite ? _playerBlack! : _playerWhite;
+            UpdateStateHistory();
             CheckForGameOver();
         }
 
@@ -134,6 +140,11 @@ namespace Logic.Domain
                 State = ChessGameState.Finished;
                 Result = Result.Draw(EndReason.FiftyMoveRule);
             }
+            else if (ThreefoldRepetition())
+            {
+                State = ChessGameState.Finished;
+                Result = Result.Draw(EndReason.ThreefoldRepetition);
+            }
         }
 
         private void ValidateMove(Move move)
@@ -154,6 +165,23 @@ namespace Logic.Domain
         {
             int fullMoves = _noCaptureOrPawnMoves / 2;
             return fullMoves >= 50;
+        }
+
+        private void UpdateStateHistory()
+        {
+            if (!_stateHistory.ContainsKey(Board.ToFen(CurrentPlayer.Color)))
+            {
+                _stateHistory[Board.ToFen(CurrentPlayer.Color)] = 1;
+            }
+            else
+            {
+                _stateHistory[Board.ToFen(CurrentPlayer.Color)]++;
+            }
+        }
+
+        private bool ThreefoldRepetition()
+        {
+            return _stateHistory.Values.Any(count => count >= 3);
         }
     }
 }

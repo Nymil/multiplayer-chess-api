@@ -1,4 +1,5 @@
-﻿using Logic.Domain.Pieces;
+﻿using Logic.Domain.Moves;
+using Logic.Domain.Pieces;
 using Logic.Domain.Players;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -44,11 +45,9 @@ namespace Logic.Domain.BoardUtil
 
         private void AddStartPieces()
         {
-            this[4, 3] = new Queen(PlayerColor.White);
-
-            // AddNonPawnPiecesForColor(PlayerColor.White);
-            // AddNonPawnPiecesForColor(PlayerColor.Black);
-            // AddNonPawnPieces();
+            AddNonPawnPiecesForColor(PlayerColor.White);
+            AddNonPawnPiecesForColor(PlayerColor.Black);
+            AddNonPawnPieces();
         }
 
         private void AddNonPawnPiecesForColor(PlayerColor color)
@@ -223,6 +222,150 @@ namespace Logic.Domain.BoardUtil
         public override string ToString()
         {
             return ToSmallFen();
+        }
+
+        public string ToFen(PlayerColor currentPlayer)
+        {
+            StringBuilder fen = new StringBuilder(88);
+            
+            fen.Append(ToSmallFen());
+            fen.Append(' ');
+            AddCurrentPlayerToFen(fen, currentPlayer);
+            fen.Append(' ');
+            AddCastleToFen(fen);
+            fen.Append(' ');
+            AddEnPassentToFen(fen, currentPlayer);
+
+            return fen.ToString();
+        }
+
+        private void AddCurrentPlayerToFen(StringBuilder fen, PlayerColor currentPlayer)
+        {
+            if (currentPlayer == PlayerColor.White)
+            {
+                fen.Append('w');
+            }
+            else
+            {
+                fen.Append('b');
+            }
+        }
+
+        private void AddEnPassentToFen(StringBuilder fen, PlayerColor currentPlayer)
+        {
+            if (!CanCaptureEnPassant(currentPlayer))
+            {
+                fen.Append('-');
+                return;
+            }
+
+            Position pos = GetPawnSkipPosition(currentPlayer.GetOpponent())!;
+            fen.Append(pos.ToString());
+        }
+
+        private void AddCastleToFen(StringBuilder fen)
+        {
+            bool castleKSW = CastleRightKS(PlayerColor.White);
+            bool castleKSB = CastleRightKS(PlayerColor.Black);
+            bool castleQSW = CastleRightQS(PlayerColor.White);
+            bool castleQSB = CastleRightQS(PlayerColor.Black);
+
+            if (!(castleKSW || castleKSB || castleQSW || castleQSB))
+            {
+                fen.Append('-');
+                return;
+            }
+
+            if (castleKSW)
+            {
+                fen.Append('K');
+            }
+            if (castleQSW)
+            {
+                fen.Append('Q');
+            }
+            if (castleKSB)
+            {
+                fen.Append('k');
+            }
+            if (castleQSB)
+            {
+                fen.Append('q');
+            }
+        }
+
+        private bool IsUnmovedKingAndRook(Position kingPos, Position rookPos)
+        {
+            if (IsEmpty(kingPos) || IsEmpty(rookPos))
+            {
+                return false;
+            }
+
+            Piece king = this[kingPos]!;
+            Piece rook = this[rookPos]!;
+
+            return king.Type == PieceType.King &&
+                !king.HasMoved &&
+                rook.Type == PieceType.Rook &&
+                !rook.HasMoved;
+        }
+
+        public bool CastleRightKS(PlayerColor color)
+        {
+            return color switch
+            {
+                PlayerColor.White => IsUnmovedKingAndRook(new Position(4, 7), new Position(7, 7)),
+                PlayerColor.Black => IsUnmovedKingAndRook(new Position(4, 0), new Position(7, 0)),
+                _ => false
+            };
+        }
+
+        public bool CastleRightQS(PlayerColor color)
+        {
+            return color switch{
+                PlayerColor.White => IsUnmovedKingAndRook(new Position(4, 7), new Position(0, 7)),
+                PlayerColor.Black => IsUnmovedKingAndRook(new Position(4, 0), new Position(0, 0)),
+                _ => false
+            };
+        }
+
+        private bool HasPawnInPosition(PlayerColor color, Position[] pawnPositions, Position skipPos)
+        {
+            foreach (Position pos in pawnPositions.Where(Contains))
+            {
+                Piece piece = this[pos]!;
+                if (piece == null || piece.Color != color || piece.Type != PieceType.Pawn)
+                {
+                    continue;
+                }
+                
+                EnPassant move = new EnPassant(pos, skipPos);
+                if (move.IsLegal(this))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool CanCaptureEnPassant(PlayerColor color)
+        {
+            Position? skipPos = GetPawnSkipPosition(color.GetOpponent());
+
+            if (skipPos == null)
+            {
+                return false;
+            }
+
+            Position[] pawnPosition = color switch
+            {
+                PlayerColor.White => new Position[] { skipPos + Direction.SouthWest, skipPos + Direction.SouthEast },
+                PlayerColor.Black => new Position[] { skipPos + Direction.NorthWest, skipPos + Direction.NorthEast },
+                _ => Array.Empty<Position>()
+            };
+
+            return HasPawnInPosition(color, pawnPosition, skipPos);
         }
     }
 }

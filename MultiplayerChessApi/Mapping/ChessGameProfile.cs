@@ -15,7 +15,7 @@ public class ChessGameProfile : Profile
 
         CreateMap<ChessGame, GameByIdResponse>()
             .ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Board, opt => opt.MapFrom(src => src.Board.ToSmallFen()))
+            .ForMember(dest => dest.Board, opt => opt.MapFrom(src => src.Board.ToFen(src.CurrentPlayer.Color)))
             .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State.ToString()))
             .ForMember(dest => dest.CurrentPlayer, opt => opt.MapFrom(src => src.CurrentPlayer.Username))
             .ForMember(dest => dest.Players, opt => opt.MapFrom(src => src.Players))
