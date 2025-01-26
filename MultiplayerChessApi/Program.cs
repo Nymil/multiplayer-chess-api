@@ -20,6 +20,14 @@ builder.Services.AddAutoMapper(typeof(ChessGameProfile));
 // Register ChessApiService as a singleton
 builder.Services.AddSingleton<IChessApiService>(ChessApiService.Instance);
 
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll", builder => {
+        builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
