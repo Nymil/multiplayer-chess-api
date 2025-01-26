@@ -49,7 +49,7 @@ namespace Logic.Domain.Pieces
 
         private IEnumerable<Position> MovePositions(Position startPosition, Board board)
         {
-            return PotentialEndPositions(startPosition).Where(pos => CanMoveOrCapture(startPosition, board));
+            return PotentialEndPositions(startPosition).Where(pos => CanMoveOrCapture(pos, board));
         }
 
         public override IEnumerable<Move> GetMoves(Position startPosition, Board board)
