@@ -2,6 +2,7 @@
 using Logic.Domain.Pieces;
 using Logic.Domain.Players;
 using System.Runtime.CompilerServices;
+using System.Security;
 using System.Text;
 
 namespace Logic.Domain.BoardUtil
@@ -157,6 +158,7 @@ namespace Logic.Domain.BoardUtil
         public Board Copy()
         {
             Board copy = new();
+            copy.Clear();
 
             foreach(Position pos in PiecePositions())
             {
@@ -164,6 +166,17 @@ namespace Logic.Domain.BoardUtil
             }
 
             return copy;
+        }
+
+        private void Clear()
+        {
+            for (int row = 0; row < 8; row++)
+            {
+                for (int col = 0; col < 8; col++)
+                {
+                    this[col, row] = null;
+                }
+            }
         }
 
         public Counting CountPieces()
