@@ -21,6 +21,7 @@ public class ChessGameProfile : Profile
             .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State.ToString()))
             .ForMember(dest => dest.CurrentPlayer, opt => opt.MapFrom(src => src.CurrentPlayer.Username))
             .ForMember(dest => dest.Players, opt => opt.MapFrom(src => src.Players))
+            .ForMember(dest => dest.LastMove, opt => opt.MapFrom(src => src.LastMove != null ? src.LastMove.ToString() : null))
             .ForMember(dest => dest.Result, opt => opt.ConvertUsing(new GameResultResponseConverter()))
             .ForMember(dest => dest.CapturedPieces, opt => opt.MapFrom(src => new CapturesResponse
                 {

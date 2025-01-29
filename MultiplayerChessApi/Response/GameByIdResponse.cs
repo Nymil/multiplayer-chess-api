@@ -10,6 +10,7 @@ public class GameByIdResponse
     public required string State { get; init; }
     public required string CurrentPlayer { get; init; }
     public required List<string> Players { get; init; }
+    public required string? LastMove { get; init; }
     public required GameResultResponse? Result { get; init; }
     public required CapturesResponse CapturedPieces { get; init; }
 }

@@ -20,6 +20,7 @@ namespace Logic.Domain
         public Board Board { get; init; }
         public Player CurrentPlayer { get; private set;}
         public ChessGameState State { get; private set; } = ChessGameState.Waiting;
+        public Move? LastMove { get; private set; } = null;
         public Result? Result { get; private set; } = null;
 
         private readonly Dictionary<string, int> _stateHistory = new Dictionary<string, int>();
@@ -98,6 +99,7 @@ namespace Logic.Domain
                 _noCaptureOrPawnMoves++;
             }
 
+            LastMove = move;
             CurrentPlayer = CurrentPlayer == _playerWhite ? _playerBlack! : _playerWhite;
             UpdateStateHistory();
             CheckForGameOver();
