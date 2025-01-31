@@ -31,6 +31,14 @@ namespace MultiplayerChessApi.Controllers
             return Ok(games.Select(_mapper.Map<AllGamesResponse>));
         }
 
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public IActionResult DeleteGames()
+        {
+            _service.DeleteGames();
+            return NoContent();
+        }
+
         [HttpPatch("{id}/join")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GameJoinedResponse))]
         public IActionResult JoinGame([FromRoute] string id, [FromBody] JoinGameRequest request)

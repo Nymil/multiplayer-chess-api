@@ -77,5 +77,10 @@ namespace Logic.Service
             Position startPosition = new Position(startPositionString);
             return game.LegalMovesForPiece(startPosition);
         }
+
+        public void DeleteGames()
+        {
+            _games.Clear();
+        }
     }
 }
