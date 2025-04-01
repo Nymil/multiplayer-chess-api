@@ -21,10 +21,11 @@ builder.Services.AddAutoMapper(typeof(ChessGameProfile));
 builder.Services.AddSingleton<IChessApiService>(ChessApiService.Instance);
 
 builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAll", builder => {
-        builder.AllowAnyOrigin()
+    options.AddPolicy("AllowSpecificOrigins", builder => {
+        builder.WithOrigins("http://localhost:5173", "https://nymil.github.io")
             .AllowAnyMethod()
-            .AllowAnyHeader();
+            .AllowAnyHeader()
+            .AllowCredentials();
     });
 });
 
@@ -39,7 +40,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowSpecificOrigins");
 
 app.UseAuthorization();
 

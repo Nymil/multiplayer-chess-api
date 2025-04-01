@@ -58,7 +58,7 @@ namespace MultiplayerChessApi.Controllers
         public IActionResult GetValidMoves([FromRoute] string id, [FromQuery] string position)
         {
             ChessGame game = _service.GetGame(id);
-            //ValidateCanViewContent(game);
+            ValidateCanViewContent(game);
 
             IEnumerable<Move> validMoves = _service.GetValidMoves(id, position);
             ValidMovesResponse response = new ValidMovesResponse { // mapper doesn't work starting from collections
@@ -73,7 +73,7 @@ namespace MultiplayerChessApi.Controllers
         public IActionResult GetGame([FromRoute] string id)
         {
             ChessGame game = _service.GetGame(id);
-            //ValidateCanViewContent(game);
+            ValidateCanViewContent(game);
 
             GameByIdResponse response = _mapper.Map<GameByIdResponse>(game);
             return Ok(response);
@@ -102,7 +102,7 @@ namespace MultiplayerChessApi.Controllers
             ValidateExecuteMoveRequest(request);
 
             ChessGame game = _service.GetGame(id);
-            // ValidateCanExecuteMove(game);
+            ValidateCanExecuteMove(game);
 
             _service.ExecuteMove(id, request.Move!, promotionPiece?.Trim('"'));
 
@@ -115,8 +115,10 @@ namespace MultiplayerChessApi.Controllers
             Response.Cookies.Append("UserUUID", userUuid, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false,
-                SameSite = SameSiteMode.Lax
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path ="/",
+                Expires = DateTimeOffset.UtcNow.AddDays(7)
             });
         }
 
